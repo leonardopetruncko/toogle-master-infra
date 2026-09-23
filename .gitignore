@@ -1,0 +1,9 @@
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+terraform.tfvars
+
+# Segredos locais da Fase 4 (chaves do New Relic, PagerDuty e Discord)
+scripts/fase4.env
