@@ -4,6 +4,8 @@ Repositório de **infraestrutura como código** do ToggleMaster (Tech Challenge 
 O deploy das aplicações é feito por GitOps, em repositório separado:
 https://github.com/leonardopetruncko/toogle-master-gitops
 
+![Arquitetura da Fase 4](https://raw.githubusercontent.com/leonardopetruncko/toogle-master-gitops/main/docs/arquitetura/arquitetura-fase4.png)
+
 ## Estrutura
 
 ```
