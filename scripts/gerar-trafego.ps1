@@ -53,11 +53,11 @@ spec:
           i=0
           while true; do
             i=$((i+1)); u="user-$((i % 50))"
-            e=$(curl -s -o /dev/null -w "%{http_code}" "http://evaluation-service:8004/evaluate?user_id=$u&flag_name=enable-new-checkout")
-            f=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $KEY" http://flag-service:8002/flags)
-            t=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $KEY" http://targeting-service:8003/rules/enable-new-checkout)
-            a=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $KEY" http://auth-service:8001/validate)
-            echo "$(date +%H:%M:%S) #$i evaluate=$e flags=$f rules=$t auth/validate=$a"
+            e=$(curl -s --max-time 5 -o /dev/null -w "%{http_code}" "http://evaluation-service:8004/evaluate?user_id=$u&flag_name=enable-new-checkout")
+            f=$(curl -s --max-time 5 -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $KEY" http://flag-service:8002/flags)
+            t=$(curl -s --max-time 5 -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $KEY" http://targeting-service:8003/rules/enable-new-checkout)
+            a=$(curl -s --max-time 5 -o /dev/null -w "%{http_code}" -H "Authorization: Bearer $KEY" http://auth-service:8001/validate)
+            echo "$(date +%H:%M:%S) #$i evaluate=$e flags=$f rules=$t auth/validate=$a"   # 000 = timeout/sem resposta
             sleep 0.3
           done
 '@
