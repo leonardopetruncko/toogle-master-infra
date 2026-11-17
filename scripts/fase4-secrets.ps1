@@ -175,11 +175,15 @@ foreach ($ns in @("toogle-master", "observability")) {
         Ok "rollout restart em $ns"
     }
 }
-$ds = kubectl get daemonset otel-collector -n observability -o name 2>$null
-if ($ds) { kubectl rollout restart daemonset/otel-collector -n observability | Out-Null; Ok "rollout restart no otel-collector" }
+# O chart nomeia o DaemonSet como "otel-collector-agent": busca pelo label para não depender do nome.
+$ds = kubectl get daemonset -n observability -l app.kubernetes.io/name=opentelemetry-collector -o name 2>$null
+if ($ds) { kubectl rollout restart $ds -n observability | Out-Null; Ok "rollout restart no otel-collector" }
 
 Write-Host "`n==================== PRONTO ====================" -ForegroundColor Green
 Write-Host "Grafana: usuário admin | senha $grafanaPass"
 Write-Host "Próximo passo (se ainda não fez):"
 Write-Host "  kubectl apply -f toogle-master-gitops\argocd\project\toogle-master-project.yaml"
 Write-Host "  kubectl apply -f toogle-master-gitops\argocd\root-app.yaml"
+# Sai com 0 de forma explícita: o último kubectl (consulta que pode não achar nada) não
+# deve fazer o script parecer que falhou.
+exit 0
