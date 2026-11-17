@@ -1,8 +1,8 @@
-#!/bin/bash
+﻿#!/bin/bash
 
 # Deploy helper (legado da Fase 2/3): faz a ponte entre o Terraform, o seed dos bancos
 # e o Kustomize do K8s. Na Fase 4 quem cria bancos e secrets e o scripts/fase4-secrets.ps1.
-# Lê os outputs do Terraform e gera os arquivos .env usados pelos manifests do K8s.
+# LÃª os outputs do Terraform e gera os arquivos .env usados pelos manifests do K8s.
 
 set -e
 
@@ -10,7 +10,7 @@ echo "--------------------------------------------------------"
 echo "ToogleMaster Post-Provisioning Helper"
 echo "--------------------------------------------------------"
 
-# 1. Verifica se o Terraform já tem outputs (ou seja, se o apply já rodou).
+# 1. Verifica se o Terraform jÃ¡ tem outputs (ou seja, se o apply jÃ¡ rodou).
 if ! terraform output > /dev/null 2>&1; then
     echo "Error: No Terraform outputs found. Did you run 'terraform apply'?"
     exit 1
@@ -18,21 +18,21 @@ fi
 
 echo "Fetching configuration from Terraform..."
 
-# Lê os valores a partir dos outputs do Terraform.
+# LÃª os valores a partir dos outputs do Terraform.
 REGION=$(terraform output -raw region 2>/dev/null || echo "us-east-1")
 AUTH_DB_ENDPOINT=$(terraform output -raw rds_auth_endpoint | cut -d: -f1)
 MAIN_DB_ENDPOINT=$(terraform output -raw rds_main_endpoint | cut -d: -f1)
 TARGETING_DB_ENDPOINT=$(terraform output -raw rds_targeting_endpoint | cut -d: -f1)
 REDIS_URL="redis://$(terraform output -raw redis_endpoint):6379"
 SQS_URL=$(terraform output -raw sqs_url)
-ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text 2>/dev/null || echo "431204285928")
+ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text 2>/dev/null || echo "058264068417")
 DB_USER="dbuser"
 DB_PASS=$(terraform output -raw db_password 2>/dev/null || echo "${DB_PASSWORD:?defina DB_PASSWORD}")
 
-# Diretório dos manifests do K8s.
+# DiretÃ³rio dos manifests do K8s.
 K8S_DIR="../k8s"
 
-# 2. Gera os arquivos .env do Kustomize (um por microsserviço).
+# 2. Gera os arquivos .env do Kustomize (um por microsserviÃ§o).
 echo "Generating Kustomize .env configuration files in $K8S_DIR..."
 
 # k8s/auth.env
@@ -72,7 +72,7 @@ echo "--------------------------------------------------------"
 echo "All K8s configuration .env files generated successfully!"
 echo "--------------------------------------------------------"
 
-# 3. Menu de próximos passos: build das imagens, seed dos bancos e deploy no EKS.
+# 3. Menu de prÃ³ximos passos: build das imagens, seed dos bancos e deploy no EKS.
 echo "What would you like to do next?"
 echo "1) Build and Push Docker images to ECR"
 echo "2) Seed Databases (RDS)"
@@ -81,7 +81,7 @@ echo "4) All of the above"
 echo "5) Exit"
 read -p "Select an option [1-5]: " OPT
 
-# Diretório raiz do projeto.
+# DiretÃ³rio raiz do projeto.
 ROOT_DIR=$(cd ".." && pwd)
 
 case $OPT in

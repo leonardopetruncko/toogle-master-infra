@@ -1,4 +1,4 @@
-terraform {
+﻿terraform {
   required_version = ">= 1.10.0" # use_lockfile (lock nativo do S3) exige 1.10+
 
   required_providers {
@@ -18,15 +18,15 @@ terraform {
 
   # ---------------------------------------------------------------------
   # Backend remoto (requisito da Fase 3): o estado nunca fica local.
-  # O bucket precisa ser criado uma única vez, fora deste projeto (ver
-  # bootstrap/), porque o backend não pode depender de um recurso que ele
-  # mesmo gerencia. O lock usa o arquivo nativo do S3 (use_lockfile), que é
-  # criado automaticamente dentro do próprio bucket.
+  # O bucket precisa ser criado uma Ãºnica vez, fora deste projeto (ver
+  # bootstrap/), porque o backend nÃ£o pode depender de um recurso que ele
+  # mesmo gerencia. O lock usa o arquivo nativo do S3 (use_lockfile), que Ã©
+  # criado automaticamente dentro do prÃ³prio bucket.
   # Troque os valores abaixo ou rode:
   #   terraform init -backend-config=backend.hcl
   # ---------------------------------------------------------------------
   backend "s3" {
-    bucket       = "toogle-master-tfstate-431204285928" # Troque pelo nome do seu bucket (precisa ser único globalmente).
+    bucket       = "toogle-master-tfstate-058264068417" # Troque pelo nome do seu bucket (precisa ser Ãºnico globalmente).
     key          = "fase3/terraform.tfstate"
     region       = "us-east-1"
     encrypt      = true
@@ -39,9 +39,9 @@ provider "aws" {
 }
 
 # ---------------------------------------------------------------------------
-# Os providers kubernetes e helm apontam para o cluster EKS recém-criado e usam
-# o AWS CLI (exec plugin) para gerar o token de autenticação. Assim, nenhuma
-# credencial estática de kubeconfig vai parar no state.
+# Os providers kubernetes e helm apontam para o cluster EKS recÃ©m-criado e usam
+# o AWS CLI (exec plugin) para gerar o token de autenticaÃ§Ã£o. Assim, nenhuma
+# credencial estÃ¡tica de kubeconfig vai parar no state.
 # ---------------------------------------------------------------------------
 provider "kubernetes" {
   host                   = module.eks.cluster_endpoint
