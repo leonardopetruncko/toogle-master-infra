@@ -190,42 +190,6 @@ terraform destroy -auto-approve -var install_argocd=true
 
 ---
 
-## PARTE C: ðŸ†• roteiro da gravaÃ§Ã£o (atÃ© 25 min)
-
-| # | Bloco | O que mostrar |
-|---|---|---|
-| 1 | **Contexto** (2 min) | Diagrama `docs/arquitetura/arquitetura-fase4.png`. A dor: falha silenciosa, 6h para saber e 4h para achar a causa. |
-| 2 | **VisÃ£o geral** (3 min) | `kubectl get nodes`, `kubectl get pods -A`, ArgoCD com as 11 Applications Synced/Healthy (a stack nova veio pelo GitOps). |
-| 3 | **MÃ©tricas, logs e OTel** (5 min) | Dashboard (recursos, req/s, erro, latÃªncia, logs ao vivo). Grafana â†’ Explore â†’ Loki: `{k8s_namespace_name="toogle-master"} \|= "ERRO"`. Mostrar `observability/values/otel-collector.yaml` e explicar os 3 pipelines. |
-| 4 | **APM e tracing** (4 min) | Datadog â†’ APM â†’ **Service Map** com os 5 serviÃ§os. APM â†’ Traces â†’ abrir um trace do `GET /evaluate` (evaluation â†’ flag/targeting â†’ auth â†’ Postgres, e o evento SQS â†’ analytics â†’ DynamoDB). |
-| 5 | **A prova real** (8 min) | Ver abaixo. |
-| 6 | **DecisÃµes** (3 min) | Datadog x New Relic, PagerDuty x OpsGenie, alert fatigue, ArgoCD x self-healing. |
-
-### A prova real (4 terminais lado a lado + navegador)
-
-```powershell
-# Terminal 1: trÃ¡fego rodando (passo 9)
-# Terminal 2: pods do auth sendo trocados
-kubectl get pods -n toogle-master -l app=auth-service -w
-# Terminal 3: o runbook automatizado
-kubectl logs -f deploy/self-healer -n observability
-# Terminal 4: CAUSA O PROBLEMA
-.\fiap_toogle_master_v2\scripts\simular-falha.ps1
-```
-
-1. Terminal 1: `auth/validate=500`, e `flags`/`rules` passam a dar `401`.
-2. Dashboard: "Taxa de 5xx do auth-service" passa da linha de 5%.
-3. Grafana â†’ Alerting â†’ Alert rules: **Pending** e depois **Firing** (~1-2 min).
-4. **PagerDuty**: incidente aberto. **Discord**: mensagem ðŸš¨ INCIDENTE detalhada.
-5. Terminal 3: `RUNBOOK: alerta ... -> kubectl rollout restart deployment/auth-service`.
-6. Terminal 2: pod novo `Running`, o antigo `Terminating`. Discord: ðŸ”§ acionado e âœ… concluÃ­do.
-7. Terminal 1 volta a `200`. Alerta **Resolved**: Discord âœ… RESOLVIDO e incidente resolvido no PagerDuty.
-
-**Prints para o relatÃ³rio** (tire durante a gravaÃ§Ã£o): dashboard do Grafana, trace distribuÃ­do
-no Datadog, mensagem no Discord e log do self-healer (terminal 3).
-
----
-
 ## Lembretes de sobrevivÃªncia ($50 / sessÃ£o de 4h)
 
 - Tudo numa sessÃ£o sÃ³: sobe â†’ confirma verde â†’ grava â†’ **destrÃ³i**.

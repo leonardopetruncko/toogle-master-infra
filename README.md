@@ -18,8 +18,7 @@ scripts/              # operação da Fase 4 (PowerShell)
 ├── gerar-trafego.ps1       # tráfego contínuo nos 5 microsserviços
 ├── simular-falha.ps1       # injeta a falha silenciosa (demo de self-healing)
 └── sql/                    # criação dos bancos, schema e dados de demonstração
-COMO-SUBIR-FASE4.md   # roteiro completo da sessão e da gravação
-RELATORIO-FASE4.md    # relatório de entrega (rascunho)
+COMO-SUBIR-FASE4.md   # passo a passo para subir e destruir o ambiente
 ```
 
 ## Por onde começar
