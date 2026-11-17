@@ -196,6 +196,12 @@ resource "aws_security_group" "data" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # A liberação a partir da SG gerenciada pelo EKS é feita por aws_security_group_rule
+  # (main.tf da raiz). Sem isto, o 2º apply apagaria essas regras e o RDS ficaria inacessível.
+  lifecycle {
+    ignore_changes = [ingress]
+  }
+
   tags = {
     Name    = "${lower(var.project_name)}-data-sg"
     Project = var.project_name
